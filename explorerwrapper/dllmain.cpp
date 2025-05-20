@@ -163,6 +163,17 @@ void HookTrayThread(void)
 		"48 89 5C 24 10 48 89 6C 24 18 48 89 74 24 20 57 41 54 41 55 41 56 41 57 48 81 EC 00 03 00 00 48 8B"
 	);
 
+	// beta 8 explorer fix - wiktorwiktor12
+
+
+	if (!CTray__SyncThreadProc_orig)
+	{
+		CTray__SyncThreadProc_orig = (LPTHREAD_START_ROUTINE)FindPattern(
+			(uintptr_t)GetModuleHandle(NULL),
+			"48 8B C4 48 89 58 10 48 89 70 18 48 89 78 20 55 41 54 41 55 41 56 41 57 48 8D A8 ?? ?? ?? ?? 48 81 EC 00 03 00 00"
+		);
+	}
+
 	if (CTray__SyncThreadProc_orig)
 	{
 		MH_CreateHook(
