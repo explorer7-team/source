@@ -191,7 +191,6 @@
 #pragma comment(linker,FORWARDN(SHLWAPI,SHRegGetValueW))
 #pragma comment(linker,FORWARDN(SHLWAPI,SHRegQueryUSValueW))
 #pragma comment(linker,FORWARDN(SHLWAPI,SHRegOpenUSKeyW))
-#pragma comment(linker,FORWARDN(SHLWAPI,SHEnumValueW))
 #pragma comment(linker,FORWARDN(SHLWAPI,SHSetThreadRef))
 #pragma comment(linker,FORWARDN(SHLWAPI,SHSetValueW))
 #pragma comment(linker,FORWARDN(SHLWAPI,SHStrDupA))
