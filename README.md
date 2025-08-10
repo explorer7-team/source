@@ -43,7 +43,12 @@ These issues, unless specified to have been resolved in a later Windows version,
 **Windows 11**
 - BlurBehind colorization mode no longer works due to the removal of the relevant accent policy (22H2+).
 - Taskbar and start menu pin creation is broken due to an internal shell32.dll code logic change (24H2+, 23H2 January 2025 Update+).
-- Immersive shell support does not function correctly, and cannot launch applications (Insider 25H2+).
+- Immersive shell support does not function correctly, and cannot launch applications (Insider 25H2+).  EnableImmersive via regedit to enable app launching 
+- Taskbar pinned icons does not have app icons and might get issue on app pining on taskbar
+- Battery taskbar does not show power toggle like high performance and power saver
+- Use the settings app to enable bluetooth,wifi and flight mode
+- The Taskbar and Start menu settings that customize notification area is not working
+- Multitasking features like snap windows,windows shake,alt tab is not working
 
 **Windows 7 limitations/bugs**
 
