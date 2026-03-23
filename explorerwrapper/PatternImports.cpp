@@ -332,45 +332,58 @@ void DisableTaskView()
 			}
 			else
 			{
-				TaskViewHostShow = "48 89 74 24 20 57 41 54 41 55 41 56 41 57 48 81 EC 20"; // not working in this run, needs further work
+				// NOTE: Iron is checked before Windows 11 21H2 because the
+				// Cobalt pattern exists for an unrelated function in Iron's
+				// twinui.pcshell.dll module.
+				TaskViewHostShow = "48 89 5C 24 20 57 41 54 41 55 41 56 41 57 48 81 EC 30";
 				TVHSPattern = (char*)FindPattern((uintptr_t)twinui_pcshell, TaskViewHostShow);
 
-				if (TVHSPattern) // 21H2 (Windows 11)
+				if (TVHSPattern) // Iron
 				{
 					ChangeImportedPattern(TVHSPattern, bytes, sizeof(bytes));
 				}
 				else
 				{
-					TaskViewHostShow = "48 89 5C 24 20 56 57 41 54 41 55 41 57 48 81 EC";
+					TaskViewHostShow = "48 89 74 24 20 57 41 54 41 55 41 56 41 57 48 81 EC 20"; // not working in this run, needs further work
 					TVHSPattern = (char*)FindPattern((uintptr_t)twinui_pcshell, TaskViewHostShow);
 
-					if (TVHSPattern) // VB
+					if (TVHSPattern) // 21H2 (Windows 11)
 					{
 						ChangeImportedPattern(TVHSPattern, bytes, sizeof(bytes));
 					}
 					else
 					{
-						TaskViewHostShow = "4C 8B DC 57 41 54 41 55 41 56 41 57 48 81 EC 40 03 00 00";
+						TaskViewHostShow = "48 89 5C 24 20 56 57 41 54 41 55 41 57 48 81 EC";
 						TVHSPattern = (char*)FindPattern((uintptr_t)twinui_pcshell, TaskViewHostShow);
 
-						if (TVHSPattern) // RS5 to 19H2
+						if (TVHSPattern) // VB
 						{
 							ChangeImportedPattern(TVHSPattern, bytes, sizeof(bytes));
 						}
 						else
 						{
-							TaskViewHostShow = "4C 8B DC ?? 41 54 41 55 41 56 41 57 48 83 EC";
+							TaskViewHostShow = "4C 8B DC 57 41 54 41 55 41 56 41 57 48 81 EC 40 03 00 00";
 							TVHSPattern = (char*)FindPattern((uintptr_t)twinui_pcshell, TaskViewHostShow);
 
-							if (TVHSPattern) // RS2 to RS4
+							if (TVHSPattern) // RS5 to 19H2
 							{
 								ChangeImportedPattern(TVHSPattern, bytes, sizeof(bytes));
 							}
 							else
 							{
-								// RS1 where twinui.pcshell.dll exists, but isn't used for this so we have to go to twinui version
-								// this is an attempt to avoid additional build checks where they aren't needed
-								goto DisableTaskView_TWINUI;
+								TaskViewHostShow = "4C 8B DC ?? 41 54 41 55 41 56 41 57 48 83 EC";
+								TVHSPattern = (char*)FindPattern((uintptr_t)twinui_pcshell, TaskViewHostShow);
+
+								if (TVHSPattern) // RS2 to RS4
+								{
+									ChangeImportedPattern(TVHSPattern, bytes, sizeof(bytes));
+								}
+								else
+								{
+									// RS1 where twinui.pcshell.dll exists, but isn't used for this so we have to go to twinui version
+									// this is an attempt to avoid additional build checks where they aren't needed
+									goto DisableTaskView_TWINUI;
+								}
 							}
 						}
 					}

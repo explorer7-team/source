@@ -66,26 +66,9 @@ LRESULT TaskmanWndProc(HWND hwnd, UINT msg, WPARAM w, LPARAM l)
 	}
 	else
 	{
-		if (msg == shellhook && msg != WM_HOTKEY)
+		if (!ShellHookService)
 		{
-			if (ShellHookService)
-			{
-				BOOL handle = TRUE;
-				if ((UINT)w == 12)
-				{
-					ShellHookService->SetTargetWindowForSerialization((HWND)l);
-				}
-				else if ((UINT)w == 0x32)
-				{
-					handle = FALSE;
-				}
-				if (handle)
-				{
-					ShellHookService->PostShellHookMessage(w, l);
-				}
-				return 0;
-			}
-
+			dbgprintf(L"Shell hook service not yet initialized. Will attempt to initialize now.");
 			GUID guidImmersiveShell;
 			CLSIDFromString(L"{c2f03a33-21f5-47fa-b4bb-156362a2f239}", &guidImmersiveShell);
 
@@ -96,9 +79,45 @@ LRESULT TaskmanWndProc(HWND hwnd, UINT msg, WPARAM w, LPARAM l)
 			CLSIDFromString(L"{914d9b3a-5e53-4e14-bbba-46062acb35a4}", &SID_Unknown);
 
 			IServiceProvider* ImmersiveShell;
-			if (CoCreateInstance(guidImmersiveShell, 0, 0x404u, IID_IServiceProvider, (LPVOID*)&ImmersiveShell) >= 0)
+			if (SUCCEEDED(CoCreateInstance(guidImmersiveShell, 0, CLSCTX_NO_CODE_DOWNLOAD | CLSCTX_LOCAL_SERVER, IID_IServiceProvider, (LPVOID*)&ImmersiveShell)))
 			{
-				ImmersiveShell->QueryService(SID_ImmersiveShellHookService, SID_Unknown, (void**)&ShellHookService);
+				HRESULT hr = ImmersiveShell->QueryService(SID_ImmersiveShellHookService, SID_Unknown, (void**)&ShellHookService);
+				if (FAILED(hr))
+				{
+					dbgprintf(L"Failed to query SID_ImmersiveShellHookService.");
+				}
+				else
+				{
+					dbgprintf(L"Successfully created CImmersiveShell service!");
+				}
+			}
+			else
+			{
+				dbgprintf(L"Failed to create instance of CImmersiveShell.");
+			}
+		}
+		
+		if (ShellHookService)
+		{
+			if (msg == shellhook && msg != WM_HOTKEY)
+			{
+				BOOL handle = TRUE;
+				if ((UINT)w == 12)
+				{
+					dbgprintf(L"Setting the target window for serialization to %x", l);
+					ShellHookService->SetTargetWindowForSerialization((HWND)l);
+				}
+				else if ((UINT)w == 0x32)
+				{
+					dbgprintf(L"Received message ID %d. This message will not be forwarded.", w);
+					handle = FALSE;
+				}
+				if (handle)
+				{
+					dbgprintf(L"[Shell Hook] Forwarding message 0d%d to HWND %x", w, l);
+					ShellHookService->PostShellHookMessage(w, l);
+				}
+				return 0;
 			}
 		}
 	}

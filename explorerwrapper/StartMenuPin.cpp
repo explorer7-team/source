@@ -251,10 +251,17 @@ void StartMenuPin_PatchShell32()
 			addr += 12;
 		else
 		{
-			dbgprintf(L"StartMenuPin_PatchShell32 SIG DID NOT WORK!!!\n");
-			dbgprintf(L"StartMenuPin_PatchShell32 SIG DID NOT WORK!!!\n");
-			dbgprintf(L"StartMenuPin_PatchShell32 SIG DID NOT WORK!!!\n");
-			return; 
+			// Search for Iron:
+			addr = FindPattern((uintptr_t)h_shell32, "49 8B 46 08 48 2B C1 48 85 C0 0F 85 ?? ?? ?? ?? 45 8B C5 4C 8D 0D ?? ?? ?? ??");
+			if (addr)
+				addr += 22;
+			else
+			{
+				dbgprintf(L"StartMenuPin_PatchShell32 SIG DID NOT WORK!!!\n");
+				dbgprintf(L"StartMenuPin_PatchShell32 SIG DID NOT WORK!!!\n");
+				dbgprintf(L"StartMenuPin_PatchShell32 SIG DID NOT WORK!!!\n");
+				return; 
+			}
 		}
 	}
 	//DWORD_PTR addr = (DWORD_PTR)GetProcAddress(h_shell32,"DllGetClassObject") + 0x85;

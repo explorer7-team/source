@@ -497,7 +497,11 @@ HWND WINAPI CreateWindowInBandNew(DWORD dwExStyle,
 			DwmSetWindowAttribute(ret, DWMWA_CLOAK, &shouldCloak, sizeof(shouldCloak));
 		}
 
-		dbgprintf(L"CREATEWINDOWINBANDNEW %i", dwBand);
+		dbgprintf(L"CREATEWINDOWINBANDNEW %x %i", ret, dwBand);
+		dbgprintf(L"CreateWindowInBandNew %x : %x, %s, %s, %x, %d, %d, %d, %d, %x, %p, %p, %p, %d",
+			ret, dwExStyle, lpClassName ? lpClassName : L"",
+			lpWindowName ? lpWindowName : L"", dwStyle, x, y, nWidth, nHeight,
+			hwndParent, hMenu, hInstance, lpParam, dwBand);
 
 		if (ret)
 		{
@@ -542,7 +546,7 @@ HWND WINAPI CreateWindowInBandExNew(DWORD exStyle, LPWSTR szClassName, PVOID p3,
 		DwmSetWindowAttribute(ret, DWMWA_CLOAK, &shouldCloak, sizeof(shouldCloak));
 	}
 
-	dbgprintf(L"%p: CreateWindowInBandEx %p %s %p %p %p %p %p %p %p %p %p %p %p = %p %p", p0, exStyle, szClassName, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, ret, GetLastError());
+	dbgprintf(L"%p: CreateWindowInBandEx %p %s %p %p %p %p %p %p %p %p %p %p %p = %p %d", p0, exStyle, szClassName, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, ret, GetLastError());
 	dbgprintf(L"CreateWindowInBandExOrig %i", p13);
 
 	SetProp(ret, L"UIA_WindowVisibilityOverriden", (HANDLE)2);
